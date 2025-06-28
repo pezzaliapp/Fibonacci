@@ -10,14 +10,16 @@ Ecco un esempio di visualizzazione della serie di Leibniz per π:
 
 ## 🚀 Funzionalità
 
-- ✨ **Spirale Aurea Animata**
-- 🔢 **Serie di Leibniz per π**
-- 🧮 **Formula Personalizzata** (scritta in `Math.*` stile JavaScript)
-- 📈 Grafico dinamico e reattivo
-- 💡 Modalità scura con interfaccia moderna
-- 📲 Compatibile con installazione su iPhone, Android, Desktop (PWA)
+- ✨ **Spirale Aurea Animata**  
+- 📐 **Serie di Leibniz per π**  
+- 🧮 **Formula Personalizzata** (scritta in `Math.*` stile JavaScript)  
+- 📈 **Grafico dinamico e reattivo**  
+- 🌙 **Modalità scura** con interfaccia moderna  
+- 🧠 **Animazioni matematiche interattive**  
+- 📲 **Compatibile con installazione su iPhone, Android, Desktop (PWA)**
 
 ---
+
 
 ## 📚 Esempi di formule
 
