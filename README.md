@@ -4,7 +4,7 @@ Una **Progressive Web App** (PWA) per visualizzare formule matematiche in forma 
 
 Ecco un esempio di visualizzazione della serie di Leibniz per π:
 
-![Screenshot](./Screenshot.png)
+![Screenshot](./Screenshot.jpg)
 
 ---
 
