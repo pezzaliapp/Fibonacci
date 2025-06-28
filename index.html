@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FIBONACCI – BINET STYLE C64</title>
+  <style>
+    body {
+      background-color: #0000aa;
+      color: #00ffff;
+      font-family: "Courier New", monospace;
+      font-size: 16px;
+      padding: 20px;
+      white-space: pre;
+      text-transform: uppercase;
+    }
+    .blink {
+      animation: blink 1s infinite;
+    }
+    @keyframes blink {
+      0%, 50%, 100% { opacity: 1; }
+      25%, 75% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+<script>
+function fibonacciBinet(n) {
+  const sqrt5 = Math.sqrt(5);
+  const phi = (1 + sqrt5) / 2;
+  const psi = (1 - sqrt5) / 2;
+  return Math.round((Math.pow(phi, n) - Math.pow(psi, n)) / sqrt5);
+}
+
+let output = "ready.\n\nformula di binet – fibonacci & phi\n----------------------------------------\n";
+output += " n |  f(n)   |  f(n)/f(n-1)\n";
+output += "----------------------------------------\n";
+
+const N = 20;
+for (let n = 1; n <= N; n++) {
+  const fn = fibonacciBinet(n);
+  const fn1 = n > 1 ? fibonacciBinet(n - 1) : 1;
+  const ratio = fn / fn1;
+  output += `${n.toString().padStart(2)} | ${fn.toString().padStart(7)} | ${ratio.toFixed(10)}\n`;
+}
+
+const phi = (1 + Math.sqrt(5)) / 2;
+output += `\nphi teorico ≈ ${phi.toFixed(10)}\n`;
+output += "ok\n";
+
+document.body.textContent = output;
+</script>
+</body>
+</html>
