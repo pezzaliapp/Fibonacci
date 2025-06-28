@@ -2,7 +2,7 @@
 
 Una **Progressive Web App** (PWA) per visualizzare formule matematiche in forma grafica e animata. Include esempi come la spirale aurea logaritmica, la serie di Leibniz per π, e consente di inserire formule personalizzate in stile JavaScript per esplorarne visivamente il comportamento.
 
-![Preview]
+![Preview](screenshot.png)
 
 ---
 
