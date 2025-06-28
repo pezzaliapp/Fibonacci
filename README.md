@@ -37,8 +37,16 @@ Math.exp(-0.05*x) * Math.cos(2*x)
 
 Math.sin(x) + Math.sin(2*x)/2 + Math.sin(4*x)/4
 
+⚙️ Applicazioni Reali
 
-⸻
+Questo visualizzatore viene utilizzato anche nei miei progetti hardware basati su LoRa e tecniche semplificate di spettrometria:
+	•	📡 Simulazione di frequenze radio multiple
+	•	📈 Visualizzazione di picchi spettrali LoRa
+	•	🔍 Analisi di pattern matematici su segnali digitali
+	•	🛰️ Supporto allo sviluppo di progetti come PayloadX e FerryGuard
+
+🔭 Un esempio concreto di come anche una semplice formula, resa visiva, può diventare un alleato nei progetti di innovazione hardware.
+
 
 🛠️ Come usarla
 	1.	Scarica o clona questa repository
