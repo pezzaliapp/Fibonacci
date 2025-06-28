@@ -1,90 +1,230 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Spirale Aurea – Fibonacci Style</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formula Visualizer</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
-      background-color: #0000aa;
-      color: #00ffff;
-      font-family: "Courier New", monospace;
-      padding: 10px;
+      background-color: #0e0e0e;
+      color: #00ffc8;
+      font-family: monospace;
       margin: 0;
+      padding: 20px;
       text-align: center;
     }
     canvas {
-      background-color: #000033;
-      border: 2px solid #00ffff;
-      margin-top: 10px;
+      background: #111;
+      border: 1px solid #444;
+      margin-top: 20px;
     }
-    h1 {
-      color: #00ffff;
-      text-transform: uppercase;
+    #switcher {
+      margin-bottom: 20px;
+    }
+    button {
+      background: #00ffc8;
+      border: none;
+      padding: 10px 20px;
+      margin: 5px;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    button.active {
+      background: #006060;
+      color: #00ffc8;
+      border: 1px solid #00ffc8;
+    }
+    #custom-section {
+      margin-top: 20px;
+      display: none;
+    }
+    input {
+      padding: 8px;
+      width: 300px;
     }
   </style>
-  <link rel="manifest" href="manifest.json">
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js');
-    }
-  </script>
 </head>
 <body>
-  <h1>✨ Spirale Aurea ✨</h1>
-  <canvas id="spirale" width="600" height="600"></canvas>
+  <h1>📊 Visualizzatore Formule</h1>
+  <div id="switcher">
+    <button id="btn-pi">Serie di Leibniz (π)</button>
+    <button id="btn-fib">Spirale Aurea</button>
+    <button id="btn-custom">Formula Personalizzata</button>
+  </div>
+  <canvas id="chart" width="800" height="400" style="display: none;"></canvas>
+  <canvas id="spirale" width="600" height="600" style="display: none;"></canvas>
+  <canvas id="custom" width="800" height="400" style="display: none;"></canvas>
+
+  <div id="custom-section">
+    <input id="inputFormula" placeholder="Es: Math.sin(x)*50" />
+    <button onclick="drawCustom()">▶ Visualizza</button>
+  </div>
 
   <script>
-    const canvas = document.getElementById('spirale');
-    const ctx = canvas.getContext('2d');
-    ctx.strokeStyle = '#00ffff';
-    ctx.lineWidth = 2;
+    const btnPi = document.getElementById('btn-pi');
+    const btnFib = document.getElementById('btn-fib');
+    const btnCustom = document.getElementById('btn-custom');
 
-    let x = 300, y = 300; // centro
-    let size = 5;         // lato iniziale
-    let angle = 0;        // rotazione
-    let step = 0;
-    const maxSteps = 12;
+    const chartCanvas = document.getElementById('chart');
+    const spiralCanvas = document.getElementById('spirale');
+    const customCanvas = document.getElementById('custom');
+    const inputFormula = document.getElementById('inputFormula');
+    const customSection = document.getElementById('custom-section');
 
-    function drawQuarterArc(cx, cy, r, startAngle) {
-      ctx.beginPath();
-      ctx.arc(cx, cy, r, startAngle, startAngle + Math.PI / 2);
-      ctx.stroke();
+    const ctx = chartCanvas.getContext('2d');
+
+    let chart = null;
+
+    function hideAll() {
+      chartCanvas.style.display = 'none';
+      spiralCanvas.style.display = 'none';
+      customCanvas.style.display = 'none';
+      customSection.style.display = 'none';
+      [btnPi, btnFib, btnCustom].forEach(b => b.classList.remove("active"));
     }
 
-    function drawNext() {
-      if (step >= maxSteps) return;
-      let a = size;
-      ctx.beginPath();
-      switch (step % 4) {
-        case 0: // right
-          ctx.rect(x, y - a, a, a);
-          drawQuarterArc(x + a, y - a, a, Math.PI);
-          x += a;
-          break;
-        case 1: // down
-          ctx.rect(x - a, y, a, a);
-          drawQuarterArc(x - a, y + a, a, -Math.PI / 2);
-          y += a;
-          break;
-        case 2: // left
-          ctx.rect(x - a - a, y - a, a, a);
-          drawQuarterArc(x - a, y - a, a, 0);
-          x -= a;
-          break;
-        case 3: // up
-          ctx.rect(x - a, y - a - a, a, a);
-          drawQuarterArc(x, y - a, a, Math.PI / 2);
-          y -= a;
-          break;
+    function showPiSeries() {
+      hideAll();
+      chartCanvas.style.display = 'block';
+      btnPi.classList.add('active');
+
+      const labels = [];
+      const dataPi = [];
+      let sum = 0;
+      let sign = 1;
+
+      if (chart) chart.destroy();
+
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Approssimazione di π',
+            data: dataPi,
+            borderColor: '#00ffc8',
+            backgroundColor: '#00ffc8',
+            fill: false,
+            tension: 0.1
+          }]
+        },
+        options: {
+          animation: false,
+          scales: {
+            y: {
+              suggestedMin: 2,
+              suggestedMax: 4
+            }
+          }
+        }
+      });
+
+      let k = 0;
+      function updateChart() {
+        if (k > 500) return;
+        sum += sign / (2 * k + 1);
+        const piApprox = 4 * sum;
+        chart.data.labels.push(k);
+        chart.data.datasets[0].data.push(piApprox);
+        chart.update();
+        sign *= -1;
+        k++;
+        setTimeout(updateChart, 30);
       }
-      ctx.stroke();
-      size += a; // incrementa in stile Fibonacci
-      step++;
-      setTimeout(drawNext, 600);
+
+      updateChart();
     }
 
-    drawNext();
+    function showFibonacciSpiral() {
+      hideAll();
+      spiralCanvas.style.display = 'block';
+      btnFib.classList.add('active');
+
+      const ctx2 = spiralCanvas.getContext('2d');
+      ctx2.clearRect(0, 0, spiralCanvas.width, spiralCanvas.height);
+      ctx2.strokeStyle = '#00ffc8';
+      ctx2.lineWidth = 2;
+
+      const phi = (1 + Math.sqrt(5)) / 2;
+      const b = Math.log(phi) / (Math.PI / 2);
+      const a = 1;
+
+      const cx = spiralCanvas.width / 2;
+      const cy = spiralCanvas.height * 0.62;
+
+      let theta = 0;
+      const maxTheta = 4 * Math.PI;
+      const scale = 13.5;
+
+      let prevX = cx + a * Math.exp(b * theta) * Math.cos(theta) * scale;
+      let prevY = cy + a * Math.exp(b * theta) * Math.sin(theta) * scale;
+
+      function drawSpiral() {
+        if (theta > maxTheta) return;
+
+        const r = a * Math.exp(b * theta);
+        const x = cx + r * Math.cos(theta) * scale;
+        const y = cy + r * Math.sin(theta) * scale;
+
+        ctx2.beginPath();
+        ctx2.moveTo(prevX, prevY);
+        ctx2.lineTo(x, y);
+        ctx2.stroke();
+
+        prevX = x;
+        prevY = y;
+        theta += 0.02;
+
+        requestAnimationFrame(drawSpiral);
+      }
+
+      drawSpiral();
+    }
+
+    function showCustom() {
+      hideAll();
+      customCanvas.style.display = 'block';
+      customSection.style.display = 'block';
+      btnCustom.classList.add('active');
+    }
+
+    function drawCustom() {
+      const formulaStr = inputFormula.value;
+      const ctx3 = customCanvas.getContext('2d');
+      ctx3.clearRect(0, 0, customCanvas.width, customCanvas.height);
+      ctx3.beginPath();
+      ctx3.strokeStyle = "#00ffc8";
+
+      let started = false;
+      for (let x = 0; x < customCanvas.width; x++) {
+        let xVal = (x - customCanvas.width / 2) / 40;
+        let yVal;
+        try {
+          yVal = eval(formulaStr.replace(/x/g, `(${xVal})`));
+        } catch {
+          continue;
+        }
+        if (!isFinite(yVal)) continue;
+        let y = customCanvas.height / 2 - yVal;
+        if (!started) {
+          ctx3.moveTo(x, y);
+          started = true;
+        } else {
+          ctx3.lineTo(x, y);
+        }
+      }
+      ctx3.stroke();
+    }
+
+    btnPi.onclick = showPiSeries;
+    btnFib.onclick = showFibonacciSpiral;
+    btnCustom.onclick = showCustom;
+
+    showPiSeries(); // default
   </script>
 </body>
 </html>
