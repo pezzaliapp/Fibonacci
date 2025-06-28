@@ -37,6 +37,8 @@ Math.exp(-0.05*x) * Math.cos(2*x)
 
 Math.sin(x) + Math.sin(2*x)/2 + Math.sin(4*x)/4
 
+---
+
 ⚙️ Applicazioni Reali
 
 Questo visualizzatore viene utilizzato anche nei miei progetti hardware basati su LoRa e tecniche semplificate di spettrometria:
@@ -47,6 +49,7 @@ Questo visualizzatore viene utilizzato anche nei miei progetti hardware basati s
 
 🔭 Un esempio concreto di come anche una semplice formula, resa visiva, può diventare un alleato nei progetti di innovazione hardware.
 
+---
 
 🛠️ Come usarla
 	1.	Scarica o clona questa repository
